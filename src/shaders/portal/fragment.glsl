@@ -103,7 +103,5 @@ void main()
     // Final color
     vec3 color = mix(uColorStart, uColorEnd, strength);
 
-
-
     gl_FragColor = vec4(color, 1.0);
 }
