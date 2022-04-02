@@ -139,6 +139,7 @@ const firefliesMaterial = new THREE.ShaderMaterial(
     }
 )
 
+// Tweaks
 gui.add(firefliesMaterial.uniforms.uSize, 'value' ).min(20).max(500).step(1).name('Firefly Size')
 gui.addColor(portalLightMaterial.uniforms.uColorStart, 'value').name('Portal color start')
 gui.addColor(portalLightMaterial.uniforms.uColorEnd, 'value').name('Portal color end')
