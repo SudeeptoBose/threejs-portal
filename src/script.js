@@ -16,8 +16,9 @@ import portalFragmentShader from './shaders/portal/fragment.glsl'
 // Debug
 const debugObject = {}
 const gui = new dat.GUI({
-    width: 200
+    width: 300
 })
+gui.close()
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -141,8 +142,8 @@ const firefliesMaterial = new THREE.ShaderMaterial(
 
 // Tweaks
 gui.add(firefliesMaterial.uniforms.uSize, 'value' ).min(20).max(500).step(1).name('Firefly Size')
-gui.addColor(portalLightMaterial.uniforms.uColorStart, 'value').name('Portal color start')
-gui.addColor(portalLightMaterial.uniforms.uColorEnd, 'value').name('Portal color end')
+gui.addColor(portalLightMaterial.uniforms.uColorStart, 'value').name('Portal start')
+gui.addColor(portalLightMaterial.uniforms.uColorEnd, 'value').name('Portal end')
 
 // Mesh
 const fireflies = new THREE.Points(firefliesGeometry, firefliesMaterial)
