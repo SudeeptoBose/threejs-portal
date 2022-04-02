@@ -6,6 +6,9 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 import firefliesVertexShader from './shaders/fireflies/vertex.glsl'
 import firefliesFragmentShader from './shaders/fireflies/fragment.glsl'
+import portalVertexShader from './shaders/portal/vertex.glsl'
+import portalFragmentShader from './shaders/portal/fragment.glsl'
+
 
 /**
  * Base
@@ -13,7 +16,7 @@ import firefliesFragmentShader from './shaders/fireflies/fragment.glsl'
 // Debug
 const debugObject = {}
 const gui = new dat.GUI({
-    width: 400
+    width: 200
 })
 
 // Canvas
@@ -50,9 +53,20 @@ bakedTexture.encoding = THREE.sRGBEncoding
 // Baked Material
 const bakedMaterial = new THREE.MeshBasicMaterial({ map: bakedTexture })
 
-// Emission Material
+// Pole light Material
 const poleLightMaterial = new THREE.MeshBasicMaterial({color: 0x3195FF})
-const portalLightMaterial = new THREE.MeshBasicMaterial({color: 0x0BCBFF})
+
+// Portal light Material
+const portalLightMaterial = new THREE.ShaderMaterial({
+    uniforms:
+    {
+        uTime: { value: 0 },
+        uColorStart: { value: new THREE.Color(0xe6e6e6)},
+        uColorEnd: { value: new THREE.Color(0x3195FF)}
+    },
+    vertexShader: portalVertexShader,
+    fragmentShader: portalFragmentShader
+})
 
 
 /**
@@ -103,8 +117,6 @@ for(let i = 0; i < firefliesCount; i++)
     firefliesScale[i] = Math.random()
 }
 
-console.log(firefliesScale)
-
 firefliesGeometry.setAttribute( 'position', new THREE.BufferAttribute(firefliesPosition, 3))
 firefliesGeometry.setAttribute( 'aScale', new THREE.BufferAttribute(firefliesScale, 1))
 
@@ -128,6 +140,8 @@ const firefliesMaterial = new THREE.ShaderMaterial(
 )
 
 gui.add(firefliesMaterial.uniforms.uSize, 'value' ).min(20).max(500).step(1).name('Firefly Size')
+gui.addColor(portalLightMaterial.uniforms.uColorStart, 'value').name('Portal color start')
+gui.addColor(portalLightMaterial.uniforms.uColorEnd, 'value').name('Portal color end')
 
 // Mesh
 const fireflies = new THREE.Points(firefliesGeometry, firefliesMaterial)
@@ -205,6 +219,7 @@ const tick = () =>
 
     // Update material
     fireflies.material.uniforms.uTime.value = elapsedTime
+    portalLightMaterial.uniforms.uTime.value = elapsedTime
 
     // Update controls
     controls.update()
